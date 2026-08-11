@@ -10,8 +10,7 @@
  */
 
 var SHEET_NAME = 'Bookings';
-// Comma-separated. Anyone listed gets every booking notification.
-var NOTIFY_EMAIL = 'sandybagger1@gmail.com,ian.melchor@mmi.io';
+var NOTIFY_EMAIL = 'sandybagger1@gmail.com';
 var BUNDLE_PRICE = 200;
 var MIN_FILL_MS = 3000;
 
