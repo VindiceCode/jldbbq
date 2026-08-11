@@ -31,7 +31,11 @@ function doPost(e) {
     // Server-side validation. Client checks are UX, never a gate.
     var phoneDigits = String(p.phone || '').replace(/\D/g, '');
     var emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(String(p.email || ''));
-    if (!String(p.name || '').trim() || phoneDigits.length !== 10 || !emailOk) return ok_();
+    // Unlike the bot gates above, a real person failing validation must be
+    // told, or a legitimate booking vanishes while the site claims success.
+    if (!String(p.name || '').trim() || phoneDigits.length !== 10 || !emailOk) {
+      return json_({ ok: false, error: 'validation' });
+    }
 
     var now = new Date();
     var trays = p.orderType === 'bundle' ? Number(p.trays || 1) : '';
@@ -63,7 +67,13 @@ function doPost(e) {
       lock.releaseLock();
     }
 
-    notify_(p, value, rowNumber);
+    // The row is already saved. A mail failure (quota, transient) must not
+    // report failure to the customer, or they resubmit and we get a duplicate.
+    try {
+      notify_(p, value, rowNumber);
+    } catch (mailErr) {
+      console.error('Booking saved on row ' + rowNumber + ' but notify failed', mailErr);
+    }
     return ok_();
   } catch (err) {
     console.error(err);
@@ -152,7 +162,8 @@ function notify_(p, value, rowNumber) {
 
 function escape_(s) {
   return String(s == null ? '' : s)
-    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
 }
 
 function ok_() { return json_({ ok: true }); }

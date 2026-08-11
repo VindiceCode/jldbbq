@@ -235,6 +235,10 @@ export const BookingForm = ({
   };
   const reset = () => {
     setSubmitted(null);
+    setSendError('');
+    setAtCap(false);
+    setCompany('');
+    renderedAt.current = Date.now();
     setV({
       name: '',
       phone: '',
