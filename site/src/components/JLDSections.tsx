@@ -482,6 +482,7 @@ export const GallerySection = () => {
   const [i, setI] = useState(0);
   const [zoom, setZoom] = useState(false);
   const stripRef = useRef<HTMLDivElement>(null);
+  const firstPaint = useRef(true);
   const shown = useMemo(() => cat === 'All' ? GALLERY : GALLERY.filter(g => g.category === cat), [cat]);
   const active = shown[Math.min(i, shown.length - 1)];
   const go = (next: number) => setI((next + shown.length) % shown.length);
@@ -489,12 +490,21 @@ export const GallerySection = () => {
     setI(0);
   }, [cat]);
   useEffect(() => {
-    const el = stripRef.current?.querySelector<HTMLElement>(`[data-idx="${i}"]`);
-    el?.scrollIntoView({
-      behavior: 'smooth',
-      inline: 'center',
-      block: 'nearest'
+    const strip = stripRef.current;
+    const el = strip?.querySelector<HTMLElement>(`[data-idx="${i}"]`);
+    if (!strip || !el) return;
+    // Scroll the strip itself, never scrollIntoView. scrollIntoView walks up
+    // to the document and drags the whole page to the gallery on first paint,
+    // which on a phone dumps the visitor mid-page instead of at the hero.
+    const stripBox = strip.getBoundingClientRect();
+    const elBox = el.getBoundingClientRect();
+    const delta = elBox.left + elBox.width / 2 - (stripBox.left + stripBox.width / 2);
+    if (Math.abs(delta) < 1) return;
+    strip.scrollBy({
+      left: delta,
+      behavior: firstPaint.current ? 'auto' : 'smooth'
     });
+    firstPaint.current = false;
   }, [i]);
   useEffect(() => {
     if (!zoom) return;
