@@ -1,0 +1,97 @@
+@import "tailwindcss";
+
+:root {
+  --background: #ede7dc;
+  --foreground: #191512;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background: var(--background);
+  color: var(--foreground);
+}
+
+.jld-body { font-family: var(--font-body); }
+.jld-heading { font-family: var(--font-heading); }
+.jld-display { font-family: var(--font-display); font-weight: 400; font-synthesis: none; }
+.jld-script { font-family: var(--font-script); font-weight: 400; font-synthesis: none; }
+
+.jld-root {
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+}
+
+.jld-root h1,
+.jld-root h2,
+.jld-root h3 {
+  font-family: var(--font-display);
+  font-weight: 400;
+}
+
+@keyframes jld-marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+.jld-marquee-track {
+  animation: jld-marquee 32s linear infinite;
+}
+
+.jld-marquee:hover .jld-marquee-track,
+.jld-marquee:focus-visible .jld-marquee-track {
+  animation-play-state: paused;
+}
+
+@keyframes jld-caret {
+  0%, 45% { opacity: 1; }
+  50%, 95% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+.jld-caret {
+  animation: jld-caret 1.05s steps(1, end) infinite;
+  min-height: 1em;
+}
+
+.jld-strip {
+  scrollbar-width: thin;
+  scrollbar-color: #b9a98f transparent;
+  scroll-snap-type: x proximity;
+}
+
+.jld-strip > * {
+  scroll-snap-align: center;
+}
+
+.jld-strip::-webkit-scrollbar {
+  height: 6px;
+}
+
+.jld-strip::-webkit-scrollbar-thumb {
+  background: #b9a98f;
+  border-radius: 3px;
+}
+
+.jld-strip::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* Honeypot: off-screen rather than display:none, which some bots detect. */
+.jld-hp {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .jld-marquee-track { animation: none; }
+  .jld-caret { animation: none; opacity: 1; }
+  .jld-root * {
+    animation-duration: 0.001ms !important;
+    transition-duration: 0.001ms !important;
+  }
+}
