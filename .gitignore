@@ -1,10 +1,9 @@
 # Temporary MagicPath source export
 .export/
 
-# Generated print artifacts (regenerate from print/card-print.html)
-print/*.pdf
-print/*.png
+# Regenerated during the print build
 print/fonts.css
+print/raw.pdf
 
 # OS
 .DS_Store
