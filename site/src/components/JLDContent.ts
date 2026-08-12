@@ -35,7 +35,7 @@ export const BUNDLE = {
     key: 'beans',
     name: 'Baked Beans',
     weight: '5 lbs',
-    note: 'Slow-cooked sweet and smoky, with bits of pork stirred right through.',
+    note: 'Slow-cooked sweet and smoky.',
     src: "/photos/baked-beans.jpg"
   }]
 
